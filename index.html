@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Markdown Studio BD -- offline bilingual (English/Bangla) markdown editor with live preview.">
+<title>Markdown Studio BD</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <h1>Markdown Studio BD<small data-i18n="tagline">Offline bilingual markdown editor</small></h1>
+    </div>
+    <div class="seg" role="group" aria-label="Language">
+      <button id="lang-en" class="active" type="button">EN</button>
+      <button id="lang-bn" type="button">&#x09AC;&#x09BE;&#x0982;</button>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button id="theme-light" class="active" type="button" data-i18n="light">Light</button>
+      <button id="theme-dark" type="button" data-i18n="dark">Dark</button>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <div class="toolbar" role="toolbar" aria-label="Formatting">
+    <button type="button" data-tool="bold" data-i18n-title="tipBold" title="Bold"><b>B</b></button>
+    <button type="button" data-tool="italic" data-i18n-title="tipItalic" title="Italic"><i>I</i></button>
+    <button type="button" data-tool="code" data-i18n-title="tipCode" title="Inline code">&lt;/&gt;</button>
+    <button type="button" data-tool="link" data-i18n-title="tipLink" title="Link">&#x1F517;</button>
+    <button type="button" data-tool="image" data-i18n-title="tipImage" title="Image">&#x1F5BC;</button>
+    <span class="tsep"></span>
+    <button type="button" data-tool="ul" data-i18n-title="tipBullets" title="Bulleted list">&#x2022;&#x2261;</button>
+    <button type="button" data-tool="ol" data-i18n-title="tipNumbers" title="Numbered list">1&#x2261;</button>
+    <button type="button" data-tool="quote" data-i18n-title="tipQuote" title="Quote">&ldquo;&rdquo;</button>
+    <button type="button" data-tool="codeblock" data-i18n-title="tipCodeBlock" title="Code block">{ }</button>
+    <button type="button" data-tool="table" data-i18n-title="tipTable" title="Table">&#x25A6;</button>
+    <span class="tsep"></span>
+    <button type="button" data-tool="h1" data-i18n-title="tipH1" title="Heading 1">H1</button>
+    <button type="button" data-tool="h2" data-i18n-title="tipH2" title="Heading 2">H2</button>
+    <button type="button" data-tool="h3" data-i18n-title="tipH3" title="Heading 3">H3</button>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="btn-new" data-i18n="new">New</button>
+    <button type="button" class="btn" id="btn-open" data-i18n="open">Open</button>
+    <button type="button" class="btn" id="btn-sample" data-i18n="sample">Sample</button>
+    <button type="button" class="btn danger" id="btn-clear" data-i18n="clear">Clear</button>
+    <button type="button" class="btn" id="btn-dl-md" data-i18n="downloadMd">Download .md</button>
+    <button type="button" class="btn" id="btn-dl-html" data-i18n="downloadHtml">Download .html</button>
+    <button type="button" class="btn" id="btn-print" data-i18n="print">Print</button>
+    <input type="file" id="file-input" accept=".md,.markdown,.txt" hidden>
+  </div>
+
+  <main class="workspace">
+    <section class="pane editor-pane" aria-label="Editor">
+      <div class="pane-head"><span data-i18n="editorLabel">Editor</span><span>Ctrl+B / Ctrl+I / Ctrl+K</span></div>
+      <textarea id="editor" data-i18n-ph="placeholder" placeholder="# Start writing markdown here..." spellcheck="false"></textarea>
+    </section>
+    <section class="pane preview-pane" aria-label="Preview">
+      <div class="pane-head"><span data-i18n="previewLabel">Preview</span></div>
+      <div id="preview"></div>
+    </section>
+  </main>
+</div>
+
+<div class="empty-state" id="empty-state" style="display:none">
+  <div class="big">&#x270E;</div>
+  <h3 data-i18n="emptyTitle">Start writing here</h3>
+  <p data-i18n="emptyHint">Write markdown in the editor on the left and see the preview on the right.</p>
+</div>
+
+<div class="statsbar">
+  <div class="statsbar-inner">
+    <span class="stat"><span data-i18n="words">Words</span><b id="stat-words">0</b></span>
+    <span class="stat"><span data-i18n="chars">Characters</span><b id="stat-chars">0</b></span>
+    <span class="stat"><span data-i18n="lines">Lines</span><b id="stat-lines">0</b></span>
+    <span class="stat"><span data-i18n="readingTime">Reading time</span><b id="stat-read">0 min</b></span>
+  </div>
+</div>
+
+<footer class="foot">Markdown Studio BD &mdash; 100% offline. Your text never leaves this device.</footer>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h3 data-i18n="confirmClearTitle">Clear document</h3>
+    <p data-i18n="confirmClearBody">All text will be permanently deleted. To confirm, type DELETE below.</p>
+    <label for="modal-input" data-i18n="typeDeleteLabel">Type DELETE to confirm</label>
+    <input type="text" id="modal-input" autocomplete="off" spellcheck="false">
+    <div class="modal-row">
+      <button type="button" class="btn" id="modal-cancel" data-i18n="cancel">Cancel</button>
+      <button type="button" class="btn primary" id="modal-confirm" data-i18n="confirm" disabled>Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="js/markdown.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
